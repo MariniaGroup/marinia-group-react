@@ -30,7 +30,7 @@ const ASSET = '/assets/';
 const MEMBER_ASSET = `${ASSET}membership/`;
 
 const stripeLinks = {
-  onboarding: '#STRIPE_ONBOARDING_RETAINER_PAYMENT_LINK',
+  onboarding: "https://buy.stripe.com/9B68wP7Ad6wY17C39ufYY00",
   smartMarketing: '#STRIPE_SMART_MARKETING_WEEKLY_LINK',
   smartBooks: '#STRIPE_SMART_BOOKS_WEEKLY_LINK',
   payrollBooks: '#STRIPE_SMART_PAYROLL_BOOKS_WEEKLY_LINK',
@@ -50,7 +50,7 @@ const tiers = [
     cadence: '/week',
     image: 'smm.png',
     short:
-      'Marketing management, brand presence, website support, content, static ads, and basic business systems engineering.',
+      'Marketing management, brand presence, website support, AI-powered commercials, content, static ads, and basic business systems engineering.',
     includes: [
       'Brand image support',
       'Phased website/landing page support',
@@ -196,7 +196,7 @@ const companyLinks = [
     url: 'https://www.mergemads.com/',
     asset: 'merge-banner.png',
     label: 'Marketing, branding, websites, lookbooks, and visual campaigns',
-    text: 'MergeMADS supports the creative side of the ecosystem: brand identity, social content, websites, ads, product visuals, digital lookbooks, pitch materials, and campaign-ready marketing assets.'
+    text: 'MergeMADS supports the creative side of the ecosystem: brand identity, social content, commercials, websites, ads, product visuals, digital lookbooks, pitch materials, and campaign-ready marketing assets.'
   },
   {
     name: 'Elevate AI Solutions',
@@ -286,8 +286,9 @@ function Hero() {
         <h1>Professional business growth services without the large upfront price tag.</h1>
         <p className="lead">
           Marinia Group helps businesses grow through weekly access to marketing management, web development,
-          app and workflow planning, data/software engineering, bookkeeping support, payroll coordination, analytics,
-          loyalty systems, and smart business advisory support depending on the selected tier.
+          app design, software engineering, data science, bookkeeping, payroll, analytics,
+          loyalty systems, business plan development, and smart business advisory support depending on the selected tier. Join our Smart Business Network
+          to access member discounts on business services and flexible payment plans.
         </p>
 
         <div className="hero-actions">
@@ -308,20 +309,14 @@ function Hero() {
         </div>
       </div>
 
-      <div className="hero-stage" aria-label="Future animated Marinia Group hero video placeholder">
-        <div className="orb orb-one"></div>
-        <div className="orb orb-two"></div>
-        <div className="video-frame">
-          <div className="scan-line"></div>
-          <img src={`${ASSET}marinia-logo.png`} alt="Marinia Group animated hero placeholder" />
-          <p className="eyebrow">Animated Hero Placeholder</p>
-          <h2>Drop the future Marinia Group hero animation here.</h2>
-          <p>
-            Placeholder path: <strong>/public/assets/marinia-hero.mp4</strong>. Replace this frame with a large looping hero video once the animation is ready.
-          </p>
-        </div>
+      <div className="hero-stage hero-stage-image" aria-label="Marinia Group smart city data network hero">
+        <img
+          className="hero-city-image"
+          src="/assets/mg-hero.png"
+          alt="Marinia Group smart city data network hero"
+        />
       </div>
-    </section>
+    </section >
   );
 }
 
@@ -332,9 +327,9 @@ function AboutMarinia() {
       <div className="about-grid">
         <div>
           <p className="eyebrow">Parent company</p>
-          <h2>Marinia Group, LLC is the parent company behind a connected business-growth ecosystem.</h2>
+          <h2>Marinia Group is the parent company behind a connected business-growth ecosystem.</h2>
           <p className="lead">
-            Marinia Group, LLC brings together marketing, financial operations, data/software engineering, web development,
+            Marinia Group brings together marketing, financial operations, data/software engineering, web development,
             app planning, workflow design, and smart business advisory support through three operating brands: Merge Marketing & Design Studio,
             Elevate AI Solutions, and Vista Insurance & Financial Services.
           </p>
@@ -411,7 +406,7 @@ function CompanyEcosystem() {
         <h2>Three brands work together under Marinia Group.</h2>
         <p>
           Marinia Group is the parent company. The brands below represent the service areas that power the Marinia Smart Business Network.
-          Click each card to visit the separate brand website.
+          Standard market rates apply at each brand for non-Smart Business Network members. Click each card to visit the brand.
         </p>
       </div>
 
@@ -460,14 +455,14 @@ function DivisionCards() {
     <section className="division-section shell" id="divisions">
       <div className="section-heading">
         <p className="eyebrow">One parent company. Three service strengths.</p>
-        <h2>Built from Marinia Group’s creative, technical, and financial ecosystem.</h2>
+        <h2>Built from Marinia Group's creative, technical, and financial ecosystem.</h2>
       </div>
 
       <div className="division-grid">
         <article className="division-card merge">
           <img src={`${ASSET}merge-banner.png`} alt="Merge Marketing and Design Studio logo" />
           <h3>Merge Marketing & Design Studio</h3>
-          <p>Brand identity, websites, lookbooks, social media, static ads, product mockups, customer-facing assets, and visual campaigns.</p>
+          <p>Brand identity, Ai-powered commercials, websites, lookbooks, social media, static ads, product mockups, customer-facing assets, and visual campaigns.</p>
         </article>
 
         <article className="division-card elevate">
@@ -494,6 +489,7 @@ function Memberships() {
         <h2>Weekly pricing that combines marketing, operations, and engineering support.</h2>
         <p>
           Membership begins with a separate $300 onboarding retainer. Weekly autopay starts in Week 2. Members complete an initial four weekly dues commitment after onboarding.
+          Need a flexible payment plan on the $300 onboarding retainer? A Buy Now, Pay Later option is available at checkout for eligible customers. Approval and payment terms are handled by Klarna.
         </p>
       </div>
 
@@ -592,7 +588,8 @@ function OnboardingAndStripe() {
           <h2>$300 Onboarding Retainer</h2>
           <p>
             The onboarding retainer covers intake review, business review, brand review, setup, project planning, membership activation,
-            and placement in the production schedule. It is separate from weekly dues and does not count toward the four weekly dues commitment.
+            and placement in the production schedule. It is separate from weekly dues. Need flexibility on the onboarding retainer?
+            Buy Now, Pay Later options are available via Klarna at checkout.
           </p>
           <a href={stripeLinks.onboarding} className="button primary full">Pay Onboarding Retainer</a>
         </article>
@@ -648,7 +645,7 @@ function PaymentTerms() {
         <article>
           <ReceiptText />
           <h3>Onboarding retainer</h3>
-          <p>The $300 onboarding retainer is paid in Week 1 and is separate from weekly dues. It does not count toward the initial four weekly dues commitment.</p>
+          <p>The $300 onboarding retainer is paid in Week 1 and is separate from weekly dues. Buy Now, Pay Later options are avaliable via Klarna at checkout.</p>
         </article>
         <article>
           <CreditCard />
@@ -759,7 +756,7 @@ function Contact() {
         <p className="eyebrow">Need help choosing?</p>
         <h2>Start with the onboarding retainer or book a discovery call.</h2>
         <p>
-          We can help choose the right tier during onboarding and prioritize the first 30-day roadmap for your brand, website, bookkeeping, loyalty system, or data workflow.
+          Buy Now, Pay Later options are available via Klarna at checkout. Your personal Success Manager will reach out within 1 business day to prioritize the first 30-day roadmap for your brand, website, bookkeeping, loyalty system, or data workflow.
         </p>
         <div className="hero-actions center">
           <a href={stripeLinks.onboarding} className="button primary">Join the Network</a>
