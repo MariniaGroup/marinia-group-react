@@ -189,6 +189,40 @@ const serviceCards = [
   }
 ];
 
+
+const companyLinks = [
+  {
+    name: 'Merge Marketing & Design Studio',
+    url: 'https://www.mergemads.com/',
+    asset: 'merge-banner.png',
+    label: 'Marketing, branding, websites, lookbooks, and visual campaigns',
+    text: 'MergeMADS supports the creative side of the ecosystem: brand identity, social content, websites, ads, product visuals, digital lookbooks, pitch materials, and campaign-ready marketing assets.'
+  },
+  {
+    name: 'Elevate AI Solutions',
+    url: 'https://www.elevate-aisolutions.com/',
+    asset: 'elevate-banner.png',
+    label: 'AI, data, cloud, automation, and smart systems',
+    text: 'Elevate AI Solutions supports the technical side: data/software engineering, workflow automation planning, dashboards, portals, AI readiness, cloud architecture, and smart business system design.'
+  },
+  {
+    name: 'Vista Insurance & Financial Services',
+    url: 'https://www.vistaifs.com/',
+    asset: 'vista-logo.png',
+    label: 'Bookkeeping support, payroll coordination, financial records, and business readiness',
+    text: 'Vista IFS supports the financial operations side: QuickBooks bookkeeping support, payroll coordination, record organization, reporting, tax-readiness records, and future insurance/financial service expansion.'
+  }
+];
+
+const values = [
+  ['Smart systems', 'We help small businesses build repeatable processes, customer flows, websites, dashboards, and systems that can grow over time.'],
+  ['Practical affordability', 'We structure phased weekly support so businesses can access professional services without one large upfront project fee.'],
+  ['Worldbuilding mindset', 'We connect everyday business operations to a bigger vision: smarter workplaces, stronger communities, and smart-city readiness.'],
+  ['Clarity and accountability', 'We use clear pricing, customer portal billing, defined weekly dues, and written expectations so members know what is included.'],
+  ['Data-informed decisions', 'We help businesses organize records, track performance, understand customers, and improve through analytics when data is available.'],
+  ['Creative excellence', 'We believe brand image, storytelling, design, and customer experience are part of business infrastructure, not decoration.']
+];
+
 const outsideCosts = [
   'QuickBooks fees',
   'QuickBooks Payroll fees',
@@ -229,8 +263,11 @@ function Header() {
         </button>
 
         <div className={`nav-links ${open ? 'open' : ''}`}>
+          <a href="#top" onClick={close}>Home</a>
+          <a href="#about" onClick={close}>About</a>
+          <a href="#mission" onClick={close}>Mission</a>
+          <a href="#companies" onClick={close}>Companies</a>
           <a href="#network" onClick={close}>Network</a>
-          <a href="#memberships" onClick={close}>Membership</a>
           <a href="#comparison" onClick={close}>Compare</a>
           <a href="#policies" onClick={close}>Terms</a>
           <a href="#manage" onClick={close}>Manage</a>
@@ -283,6 +320,111 @@ function Hero() {
             Placeholder path: <strong>/public/assets/marinia-hero.mp4</strong>. Replace this frame with a large looping hero video once the animation is ready.
           </p>
         </div>
+      </div>
+    </section>
+  );
+}
+
+
+function AboutMarinia() {
+  return (
+    <section className="section shell about" id="about">
+      <div className="about-grid">
+        <div>
+          <p className="eyebrow">Parent company</p>
+          <h2>Marinia Group, LLC is the parent company behind a connected business-growth ecosystem.</h2>
+          <p className="lead">
+            Marinia Group, LLC brings together marketing, financial operations, data/software engineering, web development,
+            app planning, workflow design, and smart business advisory support through three operating brands: Merge Marketing & Design Studio,
+            Elevate AI Solutions, and Vista Insurance & Financial Services.
+          </p>
+          <p className="lead">
+            The Marinia Smart Business Network is the membership model that gives qualified businesses phased access to that ecosystem through
+            weekly service support instead of a large one-time project fee.
+          </p>
+        </div>
+        <div className="parent-card">
+          <img src={`${ASSET}marinia-logo.png`} alt="Marinia Group logo" />
+          <h3>Engineering smarter systems for work, wellness, wealth, and worldbuilding.</h3>
+          <p>
+            Marinia Group helps businesses become smarter, more organized, more visible, and more ready for the future through practical systems,
+            stronger customer experiences, and technology-supported operations.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function MissionVisionValues() {
+  return (
+    <section className="section shell mission" id="mission">
+      <div className="section-heading wide">
+        <p className="eyebrow">Mission, vision, and values</p>
+        <h2>We build the business systems behind smarter communities.</h2>
+      </div>
+
+      <div className="mission-grid">
+        <article>
+          <Sparkles />
+          <h3>Mission</h3>
+          <p>
+            To help small businesses, organizations, and community builders access professional marketing, financial operations,
+            web/app development, data engineering, workflow design, and smart systems support in a phased and affordable way.
+          </p>
+        </article>
+        <article>
+          <LineChart />
+          <h3>Vision</h3>
+          <p>
+            To become a cross-functional parent company that helps everyday businesses adopt smart-city best practices, build stronger
+            customer relationships, organize their operations, and participate in future-ready economic development.
+          </p>
+        </article>
+        <article>
+          <Workflow />
+          <h3>Operating philosophy</h3>
+          <p>
+            A smarter business is not just a business with a website. It has a brand system, customer journey, loyalty pathway,
+            data structure, workflow, reporting rhythm, and financial recordkeeping foundation.
+          </p>
+        </article>
+      </div>
+
+      <div className="values-grid">
+        {values.map(([title, text]) => (
+          <article key={title}>
+            <h3>{title}</h3>
+            <p>{text}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function CompanyEcosystem() {
+  return (
+    <section className="division-section shell" id="companies">
+      <div className="section-heading wide">
+        <p className="eyebrow">Our companies</p>
+        <h2>Three brands work together under Marinia Group.</h2>
+        <p>
+          Marinia Group is the parent company. The brands below represent the service areas that power the Marinia Smart Business Network.
+          Click each card to visit the separate brand website.
+        </p>
+      </div>
+
+      <div className="company-grid">
+        {companyLinks.map((company) => (
+          <a className="company-card" href={company.url} target="_blank" rel="noopener noreferrer" key={company.name}>
+            <img src={`${ASSET}${company.asset}`} alt={`${company.name} logo`} />
+            <span className="company-label">{company.label}</span>
+            <h3>{company.name}</h3>
+            <p>{company.text}</p>
+            <strong>Visit website <ArrowRight size={16} /></strong>
+          </a>
+        ))}
       </div>
     </section>
   );
@@ -634,8 +776,10 @@ export default function App() {
       <Header />
       <main>
         <Hero />
+        <AboutMarinia />
+        <MissionVisionValues />
+        <CompanyEcosystem />
         <NetworkIntro />
-        <DivisionCards />
         <Memberships />
         <ComparisonTable />
         <OnboardingAndStripe />
