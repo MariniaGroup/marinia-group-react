@@ -8,123 +8,219 @@ import {
   ChevronRight,
   CreditCard,
   Database,
+  FileText,
+  Gauge,
+  HeartHandshake,
+  Laptop,
   LineChart,
   Megaphone,
   MonitorSmartphone,
   QrCode,
+  ReceiptText,
+  RefreshCcw,
   ShieldCheck,
   Sparkles,
-  WalletCards
+  Users,
+  WalletCards,
+  Workflow
 } from 'lucide-react';
+import './styles.css';
 
 const ASSET = '/assets/';
+const MEMBER_ASSET = `${ASSET}membership/`;
 
-const memberships = [
+const stripeLinks = {
+  onboarding: '#STRIPE_ONBOARDING_RETAINER_PAYMENT_LINK',
+  smartMarketing: '#STRIPE_SMART_MARKETING_WEEKLY_LINK',
+  smartBooks: '#STRIPE_SMART_BOOKS_WEEKLY_LINK',
+  payrollBooks: '#STRIPE_SMART_PAYROLL_BOOKS_WEEKLY_LINK',
+  payrollAddon: '#STRIPE_PAYROLL_WORKER_ADDON_WEEKLY_LINK',
+  smartGrowth: '#STRIPE_SMART_GROWTH_WEEKLY_LINK',
+  smartSystems: '#STRIPE_SMART_SYSTEMS_WEEKLY_LINK',
+  customerPortal: '#STRIPE_CUSTOMER_PORTAL_LINK',
+  calendly: 'https://calendly.com/studio-mergemads/30min'
+};
+
+const tiers = [
   {
-    name: 'Digital Starter',
+    key: 'smartMarketing',
+    name: 'Smart Marketing Member',
+    badge: 'Best for visibility',
     price: '$100',
     cadence: '/week',
-    description:
-      'For small businesses that need professional digital support without a large upfront website or software bill.',
-    features: [
-      'Website care and AWS hosting management',
-      'Branded forms and QR code setup',
-      'Lead capture or loyalty signup support',
-      'Minor weekly website, content, or design update',
-      'Monthly analytics snapshot'
-    ],
-    accent: 'cyan'
+    image: 'smm.png',
+    short:
+      'Marketing management, brand presence, website support, content, static ads, and basic business systems engineering.',
+    includes: [
+      'Brand image support',
+      'Phased website/landing page support',
+      'Social content support',
+      'Static ad support',
+      'Basic loyalty program planning',
+      'Basic workflow and web engineering guidance'
+    ]
   },
   {
-    name: 'Growth + Books',
+    key: 'smartBooks',
+    name: 'Smart Books Member',
+    badge: 'Best for books',
     price: '$150',
     cadence: '/week',
-    description:
-      'Digital growth support plus basic bookkeeping help through Vista Insurance & Financial Services.',
-    features: [
-      'Everything in Digital Starter',
+    image: 'sbm.png',
+    short:
+      'Marketing management, QuickBooks bookkeeping support, tax-readiness organization, and business systems engineering.',
+    includes: [
+      'Everything in Smart Marketing',
+      'QuickBooks bookkeeping support',
+      'Transaction organization',
+      'Reconciliation support',
+      'Monthly bookkeeping summaries',
+      'Tax-readiness records'
+    ]
+  },
+  {
+    key: 'payrollBooks',
+    name: 'Smart Payroll & Books Member',
+    badge: 'Best for payroll + books',
+    price: '$175',
+    cadence: '/week',
+    image: 'spbm.png',
+    short:
+      'Marketing management, bookkeeping support, payroll coordination, worker tracking, and systems engineering support.',
+    includes: [
+      'Everything in Smart Books',
+      'Payroll coordination support',
+      'Worker tracking',
+      'Payroll records organization',
+      'Basic payroll reports',
+      'Payroll Worker Add-On required per worker'
+    ]
+  },
+  {
+    key: 'smartGrowth',
+    name: 'Smart Growth Member',
+    badge: 'Best for growth',
+    price: '$250',
+    cadence: '/week',
+    image: 'sgm.png',
+    short:
+      'Marketing management, growth strategy, loyalty planning, lead tracking, analytics, and enhanced systems support.',
+    includes: [
+      'Enhanced marketing management',
+      'Campaign planning',
+      'Lead tracking and funnel support',
+      'Basic analytics and KPI review',
       'Basic bookkeeping support',
-      'Invoice and payment tracking support',
-      'Monthly records review',
-      'Business admin organization'
+      'Enhanced web and workflow engineering'
     ],
-    accent: 'gold',
     featured: true
   },
   {
-    name: 'Technology Growth',
-    price: 'Custom',
-    cadence: '/quote',
-    description:
-      'For businesses that need a deeper AWS-powered system, customer dashboard, Cut Catalog, or analytics workflow.',
-    features: [
-      'Customer check-in workflows',
-      'Cut Catalog or service catalog systems',
-      'Loyalty and rewards dashboard',
-      'Custom AWS architecture',
-      'Advanced integrations quoted separately'
-    ],
-    accent: 'purple'
+    key: 'smartSystems',
+    name: 'Smart Systems Member',
+    badge: 'Best for automation',
+    price: '$350',
+    cadence: '/week',
+    image: 'ssm.png',
+    short:
+      'Advanced marketing, bookkeeping, dashboards, automation planning, data organization, and web/app engineering support.',
+    includes: [
+      'Advanced marketing management',
+      'Dashboards and KPI support',
+      'Data organization',
+      'Workflow automation guidance',
+      'Web/app development support',
+      'Customer retention systems'
+    ]
   }
 ];
 
-const services = [
-  {
-    icon: MonitorSmartphone,
-    title: 'Website + Landing Pages',
-    text: 'Modern branded pages, AWS hosting, mobile layouts, booking CTAs, and service sections.'
-  },
-  {
-    icon: QrCode,
-    title: 'Customer Capture',
-    text: 'QR codes, branded forms, loyalty signups, contact lists, and client interest tracking.'
-  },
+const comparisonRows = [
+  ['Weekly price', '$100', '$150', '$175 + $3/worker', '$250', '$350'],
+  ['Marketing management', true, true, true, true, true],
+  ['Brand + website support', true, true, true, true, true],
+  ['Social content support', true, true, true, true, true],
+  ['Static ad support', true, true, true, true, true],
+  ['Loyalty / retention planning', 'Basic', 'Basic', 'Basic', true, true],
+  ['Business systems engineering', 'Basic', 'Basic', 'Basic', 'Enhanced', 'Advanced'],
+  ['Web development support', 'Basic', 'Basic', 'Basic', 'Enhanced', 'Advanced'],
+  ['App / portal planning', false, false, false, 'Planning', true],
+  ['Bookkeeping support', false, true, true, 'Basic', true],
+  ['Reconciliation support', false, true, true, 'Basic', true],
+  ['Payroll coordination', false, false, true, 'Add-on', 'Add-on'],
+  ['Payroll worker add-on', false, false, '$3/worker/week', 'Available', 'Available'],
+  ['Campaign planning', false, false, false, true, true],
+  ['Lead tracking / CRM guidance', 'Basic', 'Basic', 'Basic', true, true],
+  ['Dashboards / KPI support', false, false, false, 'Basic', true],
+  ['Automation planning', false, false, false, 'Basic', true],
+  ['Monthly smart business review', false, false, false, true, true]
+];
+
+const serviceCards = [
   {
     icon: Megaphone,
-    title: 'Lookbooks + Marketing Assets',
-    text: 'Digital lookbooks, service menus, social content, product mockups, booth concepts, and print-ready designs.'
+    title: 'Marketing Management',
+    text: 'Brand, content, static ads, campaigns, lookbooks, CTAs, and consistent promotional support.'
   },
   {
-    icon: BarChart3,
-    title: 'Analytics Dashboards',
-    text: 'Simple reporting on visits, leads, scans, services selected, reward progress, and campaign performance.'
-  },
-  {
-    icon: WalletCards,
-    title: 'Bookkeeping Add-On',
-    text: 'Basic books, transactions, invoices, payment tracking, and small business records support.'
+    icon: MonitorSmartphone,
+    title: 'Web + App Development',
+    text: 'Phased website, landing page, portal, app, customer intake, and loyalty system planning.'
   },
   {
     icon: Database,
-    title: 'AWS-Powered Tools',
-    text: 'Custom branded systems, data capture, dashboards, service catalogs, and future automation.'
+    title: 'Data + Software Engineering',
+    text: 'Workflow design, data organization, reporting structures, dashboards, and automation guidance.'
+  },
+  {
+    icon: WalletCards,
+    title: 'Bookkeeping Support',
+    text: 'QuickBooks bookkeeping support, transaction organization, reconciliation help, and record readiness.'
+  },
+  {
+    icon: Users,
+    title: 'Payroll Coordination',
+    text: 'Worker tracking, payroll entry support, due-date coordination, and payroll record organization.'
+  },
+  {
+    icon: HeartHandshake,
+    title: 'Loyalty + Retention Systems',
+    text: 'QR signups, loyalty program planning, customer follow-up flows, and retention system support.'
   }
 ];
 
-const costItems = [
-  'Meta ad spend',
-  'Google ad spend',
-  'Printing',
-  'Tents + banners',
-  'Business cards',
+const outsideCosts = [
+  'QuickBooks fees',
+  'QuickBooks Payroll fees',
+  'Ad spend',
   'Domains',
+  'Hosting',
   'Software subscriptions',
-  'SMS/email platform fees',
+  'Printing',
+  'Licensed images/music',
   'Shipping',
-  'Product manufacturing'
+  'Payment processor fees',
+  'Third-party platforms'
 ];
+
+function CheckValue({ value }) {
+  if (value === true) return <CheckCircle2 className="table-check" size={18} aria-label="Included" />;
+  if (value === false) return <span className="dash">—</span>;
+  return <span className="table-text">{value}</span>;
+}
 
 function Header() {
   const [open, setOpen] = useState(false);
+  const close = () => setOpen(false);
 
   return (
     <header className="site-header">
       <nav className="nav shell">
-        <a className="brand" href="#top" onClick={() => setOpen(false)}>
+        <a className="brand" href="#top" onClick={close}>
           <img src={`${ASSET}marinia-logo.png`} alt="Marinia Group logo" />
           <span>
             <strong>Marinia Group</strong>
-            <small>Weekly Business Growth Memberships</small>
+            <small>Smart Business Network</small>
           </span>
         </a>
 
@@ -133,11 +229,12 @@ function Header() {
         </button>
 
         <div className={`nav-links ${open ? 'open' : ''}`}>
-          <a href="#memberships" onClick={() => setOpen(false)}>Memberships</a>
-          <a href="#divisions" onClick={() => setOpen(false)}>Divisions</a>
-          <a href="#autopay" onClick={() => setOpen(false)}>Weekly Pay</a>
-          <a href="#services" onClick={() => setOpen(false)}>Services</a>
-          <a href="#contact" className="nav-cta" onClick={() => setOpen(false)}>Book Call</a>
+          <a href="#network" onClick={close}>Network</a>
+          <a href="#memberships" onClick={close}>Membership</a>
+          <a href="#comparison" onClick={close}>Compare</a>
+          <a href="#policies" onClick={close}>Terms</a>
+          <a href="#manage" onClick={close}>Manage</a>
+          <a href="#join" className="nav-cta" onClick={close}>Join</a>
         </div>
       </nav>
     </header>
@@ -148,26 +245,29 @@ function Hero() {
   return (
     <section className="hero shell" id="top">
       <div className="hero-copy">
-        <p className="eyebrow">Branding • AWS Tools • Analytics • Bookkeeping</p>
-        <h1>Business infrastructure without the large upfront bill.</h1>
+        <p className="eyebrow">Marinia Smart Business Network</p>
+        <h1>Professional business growth services without the large upfront price tag.</h1>
         <p className="lead">
-          Marinia Group helps small and minority-owned businesses build professional branding, customer capture,
-          digital systems, light analytics, and bookkeeping support through tiered weekly memberships.
+          Marinia Group helps businesses grow through weekly access to marketing management, web development,
+          app and workflow planning, data/software engineering, bookkeeping support, payroll coordination, analytics,
+          loyalty systems, and smart business advisory support depending on the selected tier.
         </p>
 
         <div className="hero-actions">
-          <a href="#memberships" className="button primary">
-            View Memberships <ArrowRight size={18} />
+          <a href="#join" className="button primary">
+            Join the Network <ArrowRight size={18} />
           </a>
-          <a href="https://calendly.com/studio-mergemads/30min" target="_blank" rel="noopener noreferrer" className="button secondary">
-            Book a Discovery Call
+          <a href="#comparison" className="button secondary">
+            Compare Tiers
           </a>
         </div>
 
-        <div className="proof-strip" aria-label="Marinia Group divisions">
-          <span>MergeMADS</span>
-          <span>Elevate AI Solutions</span>
-          <span>Vista IFS</span>
+        <div className="proof-strip" aria-label="Marinia Group service areas">
+          <span>Marketing</span>
+          <span>Bookkeeping</span>
+          <span>Engineering</span>
+          <span>Analytics</span>
+          <span>Loyalty Systems</span>
         </div>
       </div>
 
@@ -176,13 +276,38 @@ function Hero() {
         <div className="orb orb-two"></div>
         <div className="video-frame">
           <div className="scan-line"></div>
-          <img src={`${ASSET}marinia-logo.png`} alt="Marinia Group logo placeholder" />
-          <p className="eyebrow">Hero Video Placeholder</p>
-          <h2>Animated Marinia Group Logo</h2>
+          <img src={`${ASSET}marinia-logo.png`} alt="Marinia Group animated hero placeholder" />
+          <p className="eyebrow">Animated Hero Placeholder</p>
+          <h2>Drop the future Marinia Group hero animation here.</h2>
           <p>
-            Drop the future Runway animation here as <strong>marinia-hero.mp4</strong> and replace this placeholder with the video.
+            Placeholder path: <strong>/public/assets/marinia-hero.mp4</strong>. Replace this frame with a large looping hero video once the animation is ready.
           </p>
         </div>
+      </div>
+    </section>
+  );
+}
+
+function NetworkIntro() {
+  return (
+    <section className="section shell intro" id="network">
+      <div className="section-heading wide">
+        <p className="eyebrow">What members receive</p>
+        <h2>One weekly membership. Multiple business functions working together.</h2>
+        <p>
+          The Marinia Smart Business Network is not a passive community subscription. It is an ongoing service membership
+          designed to give qualified businesses phased access to the kind of brand, finance, website, data, software,
+          and operational support that often costs thousands upfront when purchased as separate projects.
+        </p>
+      </div>
+      <div className="value-grid">
+        {serviceCards.map(({ icon: Icon, title, text }) => (
+          <article key={title}>
+            <Icon />
+            <h3>{title}</h3>
+            <p>{text}</p>
+          </article>
+        ))}
       </div>
     </section>
   );
@@ -200,19 +325,19 @@ function DivisionCards() {
         <article className="division-card merge">
           <img src={`${ASSET}merge-banner.png`} alt="Merge Marketing and Design Studio logo" />
           <h3>Merge Marketing & Design Studio</h3>
-          <p>Brand identity, websites, lookbooks, QR campaigns, product mockups, social content, print design, and marketing visuals.</p>
+          <p>Brand identity, websites, lookbooks, social media, static ads, product mockups, customer-facing assets, and visual campaigns.</p>
         </article>
 
         <article className="division-card elevate">
           <img src={`${ASSET}elevate-banner.png`} alt="Elevate AI Solutions logo" />
           <h3>Elevate AI Solutions</h3>
-          <p>AWS websites, branded customer capture tools, Cut Catalog systems, loyalty dashboards, analytics, and automation planning.</p>
+          <p>Data/software engineering, AWS planning, dashboards, automation planning, loyalty systems, customer portals, and smart workflow design.</p>
         </article>
 
         <article className="division-card vista">
           <img src={`${ASSET}vista-logo.png`} alt="Vista Insurance and Financial Services logo" />
           <h3>Vista Insurance & Financial Services</h3>
-          <p>Bookkeeping support, invoicing organization, records cleanup, and financial admin support for small business owners.</p>
+          <p>QuickBooks bookkeeping support, financial records organization, payroll coordination support, reporting, and tax-readiness records.</p>
         </article>
       </div>
     </section>
@@ -222,37 +347,37 @@ function DivisionCards() {
 function Memberships() {
   return (
     <section className="section shell memberships" id="memberships">
-      <div className="section-heading">
-        <p className="eyebrow">Tiered memberships</p>
-        <h2>Weekly pricing that small businesses can actually manage.</h2>
+      <div className="section-heading wide">
+        <p className="eyebrow">Membership tiers</p>
+        <h2>Weekly pricing that combines marketing, operations, and engineering support.</h2>
         <p>
-          All membership levels require a $300 deposit before work begins, followed by weekly automated withdrawals. Third-party costs are separate and must be approved before purchase.
+          Membership begins with a separate $300 onboarding retainer. Weekly autopay starts in Week 2. Members complete an initial four weekly dues commitment after onboarding.
         </p>
       </div>
 
       <div className="pricing-grid">
-        {memberships.map((plan) => (
-          <article key={plan.name} className={`price-card ${plan.featured ? 'featured' : ''} ${plan.accent}`}>
+        {tiers.map((plan) => (
+          <article key={plan.key} className={`price-card ${plan.featured ? 'featured' : ''}`}>
+            <img className="tier-image" src={`${MEMBER_ASSET}${plan.image}`} alt={`${plan.name} product graphic`} />
             <div className="price-top">
-              <p className="tier">{plan.name}</p>
-              {plan.featured && <span className="badge">Recommended</span>}
+              <p className="tier">{plan.badge}</p>
+              {plan.featured && <span className="badge">Popular</span>}
             </div>
-            <h3>
-              {plan.price}
-              <span>{plan.cadence}</span>
-            </h3>
-            <p className="deposit-note">$300 deposit required to begin.</p>
-            <p>{plan.description}</p>
+            <h3>{plan.name}</h3>
+            <div className="price-line">
+              <strong>{plan.price}</strong><span>{plan.cadence}</span>
+            </div>
+            <p className="plan-short">{plan.short}</p>
             <ul>
-              {plan.features.map((feature) => (
+              {plan.includes.map((feature) => (
                 <li key={feature}>
                   <CheckCircle2 size={17} />
                   <span>{feature}</span>
                 </li>
               ))}
             </ul>
-            <a href="#contact" className="button full">
-              Get Started <ChevronRight size={17} />
+            <a href={stripeLinks[plan.key]} className="button full" aria-label={`Stripe placeholder for ${plan.name}`}>
+              Choose Tier <ChevronRight size={17} />
             </a>
           </article>
         ))}
@@ -261,45 +386,53 @@ function Memberships() {
   );
 }
 
-function AutoPay() {
+function ComparisonTable() {
   return (
-    <section className="section shell autopay" id="autopay">
-      <div>
-        <p className="eyebrow">Weekly pay requirement</p>
-        <h2>Memberships require automated weekly withdrawals.</h2>
+    <section className="section shell comparison" id="comparison">
+      <div className="section-heading wide">
+        <p className="eyebrow">Side-by-side comparison</p>
+        <h2>Compare what is included in each tier.</h2>
         <p>
-          To keep the membership affordable and sustainable, payment is collected weekly through automated withdrawal.
-          Work begins after the membership agreement is signed and the first weekly payment is active.
+          Use this table to choose the best fit. Higher tiers include more technical support, data/engineering, dashboards, automation planning, bookkeeping, and business strategy.
         </p>
       </div>
 
-      <div className="policy-card">
-        <div className="policy-icon">
-          <CreditCard />
-        </div>
-        <h3>Payment policy</h3>
-        <ul>
-          <li>A $300 deposit is required for all membership levels.</li>\n          <li>Weekly automated payments are required after the deposit.</li>
-          <li>Third-party costs are billed separately with client approval.</li>
-          <li>Accounts past due may have updates, dashboards, or hosting access paused.</li>
-          <li>Large builds, software features, print projects, and ad campaigns are scoped separately.</li>
-        </ul>
+      <div className="comparison-wrap">
+        <table className="comparison-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Smart Marketing</th>
+              <th>Smart Books</th>
+              <th>Payroll & Books</th>
+              <th>Smart Growth</th>
+              <th>Smart Systems</th>
+            </tr>
+          </thead>
+          <tbody>
+            {comparisonRows.map(([feature, ...values]) => (
+              <tr key={feature}>
+                <td>{feature}</td>
+                {values.map((value, index) => (
+                  <td key={`${feature}-${index}`}>
+                    <CheckValue value={value} />
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-    </section>
-  );
-}
 
-function Services() {
-  return (
-    <section className="section shell services" id="services">
-      <p className="eyebrow">What we support</p>
-      <h2>From brand presence to business data.</h2>
-      <div className="service-grid">
-        {services.map(({ icon: Icon, title, text }) => (
-          <article key={title}>
-            <Icon />
-            <h3>{title}</h3>
-            <p>{text}</p>
+      <div className="mobile-tier-list" aria-label="Mobile membership comparison">
+        {tiers.map((tier) => (
+          <article key={`mobile-${tier.key}`} className="mobile-tier-card">
+            <h3>{tier.name}</h3>
+            <p className="mobile-price">{tier.price}<span>{tier.cadence}</span></p>
+            <p>{tier.short}</p>
+            <ul>
+              {tier.includes.map((item) => <li key={item}>✓ {item}</li>)}
+            </ul>
           </article>
         ))}
       </div>
@@ -307,25 +440,111 @@ function Services() {
   );
 }
 
-function UseCase() {
+function OnboardingAndStripe() {
+  return (
+    <section className="section shell join" id="join">
+      <div className="join-grid">
+        <article className="join-card retainer">
+          <img src={`${MEMBER_ASSET}mg-retainer.png`} alt="Marinia onboarding retainer product graphic" />
+          <p className="eyebrow">Start here</p>
+          <h2>$300 Onboarding Retainer</h2>
+          <p>
+            The onboarding retainer covers intake review, business review, brand review, setup, project planning, membership activation,
+            and placement in the production schedule. It is separate from weekly dues and does not count toward the four weekly dues commitment.
+          </p>
+          <a href={stripeLinks.onboarding} className="button primary full">Pay Onboarding Retainer</a>
+        </article>
+
+        <article className="join-card" id="stripe-links">
+          <p className="eyebrow">Stripe link placeholders</p>
+          <h2>Add your live Stripe links here.</h2>
+          <p>
+            Replace the placeholder values in <strong>stripeLinks</strong> at the top of <strong>src/App.jsx</strong> with the live Stripe payment links for each product and the Customer Portal link.
+          </p>
+          <div className="placeholder-list">
+            <span>#STRIPE_ONBOARDING_RETAINER_PAYMENT_LINK</span>
+            <span>#STRIPE_SMART_MARKETING_WEEKLY_LINK</span>
+            <span>#STRIPE_SMART_BOOKS_WEEKLY_LINK</span>
+            <span>#STRIPE_SMART_PAYROLL_BOOKS_WEEKLY_LINK</span>
+            <span>#STRIPE_PAYROLL_WORKER_ADDON_WEEKLY_LINK</span>
+            <span>#STRIPE_CUSTOMER_PORTAL_LINK</span>
+          </div>
+        </article>
+      </div>
+    </section>
+  );
+}
+
+function PayrollAddon() {
+  return (
+    <section className="section shell addon">
+      <div className="addon-card">
+        <img src={`${MEMBER_ASSET}payroll.png`} alt="Payroll Worker Add-On product graphic" />
+        <div>
+          <p className="eyebrow">Payroll add-on</p>
+          <h2>Payroll Worker Add-On: $3 per worker / week</h2>
+          <p>
+            Members using payroll coordination should select one Payroll Worker Add-On for each employee or contractor who needs support.
+            Example: 3 workers = quantity 3. QuickBooks Payroll fees and third-party payroll software fees are not included.
+          </p>
+          <a href={stripeLinks.payrollAddon} className="button secondary">Add Payroll Worker Product</a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function PaymentTerms() {
+  return (
+    <section className="section shell policies" id="policies">
+      <div className="section-heading wide">
+        <p className="eyebrow">Membership terms</p>
+        <h2>Clear payment and cancellation rules.</h2>
+      </div>
+
+      <div className="policy-grid">
+        <article>
+          <ReceiptText />
+          <h3>Onboarding retainer</h3>
+          <p>The $300 onboarding retainer is paid in Week 1 and is separate from weekly dues. It does not count toward the initial four weekly dues commitment.</p>
+        </article>
+        <article>
+          <CreditCard />
+          <h3>Weekly autopay</h3>
+          <p>Weekly dues begin in Week 2 through autopay. Weekly dues are non-refundable and cover the applicable weekly service period.</p>
+        </article>
+        <article>
+          <CalendarClock />
+          <h3>Four weekly dues commitment</h3>
+          <p>Members complete four weekly dues payments after onboarding. Cancelling before four weekly dues are paid may result in an early cancellation fee.</p>
+        </article>
+        <article>
+          <ShieldCheck />
+          <h3>Portal cancellation</h3>
+          <p>Members cancel future weekly dues through the secure Customer Portal. Email cancellation requests are not the official cancellation method.</p>
+        </article>
+      </div>
+    </section>
+  );
+}
+
+function SmartCityUseCase() {
   return (
     <section className="section shell use-case">
       <div className="use-case-card">
         <div>
-          <p className="eyebrow">Sample use case</p>
-          <h2>Barbershop Loyalty + Cut Catalog System</h2>
+          <p className="eyebrow">Loyalty + retention example</p>
+          <h2>A smarter business becomes part of a smarter city.</h2>
           <p>
-            A customer scans a loyalty card QR code, joins rewards, chooses a service from a branded Cut Catalog,
-            and the shop owner can see which cuts, products, and campaigns performed best over the quarter.
+            A customer scans a QR code, joins a loyalty program, books a service, receives follow-up offers, and the business owner can review leads, repeat visits,
+            customer segments, and campaign performance. This is the kind of engineering-backed customer system members can build over time.
           </p>
         </div>
 
         <div className="dashboard-mock">
-          <div className="dashboard-header">
-            <span></span><span></span><span></span>
-          </div>
+          <div className="dashboard-header"><span></span><span></span><span></span></div>
           <div className="metric-row">
-            <div><small>Members</small><strong>148</strong></div>
+            <div><small>New Members</small><strong>148</strong></div>
             <div><small>Repeat Visits</small><strong>62%</strong></div>
           </div>
           <div className="chart-bars">
@@ -335,44 +554,56 @@ function UseCase() {
             <span style={{ height: '82%' }}></span>
             <span style={{ height: '73%' }}></span>
           </div>
-          <p>Top service: Taper Fade + Beard Lineup</p>
+          <p>Dashboard placeholder: loyalty, leads, content, and business performance.</p>
         </div>
       </div>
     </section>
   );
 }
 
-function BrandVideos() {
+function OutsideCosts() {
   return (
-    <section className="brand-video-section shell">
-      <div className="section-heading">
-        <p className="eyebrow">Division brand energy</p>
-        <h2>Animated brand assets can make the site feel alive.</h2>
-      </div>
-
-      <div className="video-grid">
-        <video src={`${ASSET}merge-hero.mp4`} muted autoPlay loop playsInline />
-        <video src={`${ASSET}elevate-hero.mp4`} muted autoPlay loop playsInline />
-        <video src={`${ASSET}vista-hero.mp4`} muted autoPlay loop playsInline />
+    <section className="section shell third-party">
+      <p className="eyebrow">Outside costs</p>
+      <h2>Third-party costs are not included in weekly dues.</h2>
+      <p>
+        Membership dues cover Marinia Group services. QuickBooks fees, ad spend, software, printing, hosting, platform costs, and outside vendor expenses are not included unless specifically stated in writing.
+      </p>
+      <div className="cost-list">
+        {outsideCosts.map((item) => <span key={item}>{item}</span>)}
       </div>
     </section>
   );
 }
 
-function ThirdPartyCosts() {
+function ManageMembership() {
   return (
-    <section className="section shell third-party">
-      <p className="eyebrow">Outside costs</p>
-      <h2>Third-party fees are additional.</h2>
-      <p>
-        The weekly membership covers Marinia Group strategy, design support, hosting management, updates,
-        customer capture support, analytics review, and eligible bookkeeping support. Outside vendor costs are not included.
-      </p>
+    <section className="section shell manage" id="manage">
+      <div className="manage-card">
+        <Gauge />
+        <p className="eyebrow">Member billing portal</p>
+        <h2>Manage or cancel membership.</h2>
+        <p>
+          Members can update payment methods, view receipts, and cancel future weekly dues through the secure Customer Portal. Add the live Stripe Customer Portal link below when ready.
+        </p>
+        <a href={stripeLinks.customerPortal} className="button primary">Manage or Cancel Membership</a>
+      </div>
+    </section>
+  );
+}
 
-      <div className="cost-list">
-        {costItems.map((item) => (
-          <span key={item}>{item}</span>
-        ))}
+function PolicyPages() {
+  return (
+    <section className="section shell policy-pages" id="policy-pages">
+      <div className="section-heading">
+        <p className="eyebrow">Required website pages</p>
+        <h2>Policy page placeholders for Stripe and customers.</h2>
+      </div>
+      <div className="policy-link-grid">
+        <a href="#privacy"><FileText /> Privacy Policy Placeholder</a>
+        <a href="#terms"><BookOpenCheck /> Terms of Service Placeholder</a>
+        <a href="#refund"><RefreshCcw /> Refund & Cancellation Policy Placeholder</a>
+        <a href="#support"><Laptop /> Support Page Placeholder</a>
       </div>
     </section>
   );
@@ -383,15 +614,15 @@ function Contact() {
     <section className="section shell contact" id="contact">
       <div className="contact-card">
         <img src={`${ASSET}marinia-logo.png`} alt="Marinia Group logo" />
-        <p className="eyebrow">Start with a discovery call</p>
-        <h2>Let’s identify the first growth system your business needs.</h2>
+        <p className="eyebrow">Need help choosing?</p>
+        <h2>Start with the onboarding retainer or book a discovery call.</h2>
         <p>
-          We can begin with a website, a lead capture form, a loyalty concept, a customer dashboard,
-          a lookbook, or bookkeeping support.
+          We can help choose the right tier during onboarding and prioritize the first 30-day roadmap for your brand, website, bookkeeping, loyalty system, or data workflow.
         </p>
-        <a href="https://calendly.com/studio-mergemads/30min" target="_blank" rel="noopener noreferrer" className="button primary">
-          <CalendarClock size={18} /> Book a Discovery Call
-        </a>
+        <div className="hero-actions center">
+          <a href={stripeLinks.onboarding} className="button primary">Join the Network</a>
+          <a href={stripeLinks.calendly} target="_blank" rel="noopener noreferrer" className="button secondary"><CalendarClock size={18} /> Book a Discovery Call</a>
+        </div>
       </div>
     </section>
   );
@@ -403,28 +634,24 @@ export default function App() {
       <Header />
       <main>
         <Hero />
-        <section className="section shell intro">
-          <p className="eyebrow">The Marinia Group model</p>
-          <h2>Business growth membership for the businesses that usually get priced out.</h2>
-          <p className="wide-copy">
-            Many local businesses need more than a website. They need brand presence, customer capture, simple analytics,
-            digital follow-up, and financial organization. Marinia Group makes those assets accessible without requiring
-            a large upfront project fee.
-          </p>
-        </section>
+        <NetworkIntro />
         <DivisionCards />
         <Memberships />
-        <AutoPay />
-        <Services />
-        <UseCase />
-        <BrandVideos />
-        <ThirdPartyCosts />
+        <ComparisonTable />
+        <OnboardingAndStripe />
+        <PayrollAddon />
+        <PaymentTerms />
+        <SmartCityUseCase />
+        <OutsideCosts />
+        <ManageMembership />
+        <PolicyPages />
         <Contact />
       </main>
 
       <footer className="footer">
         <p>© {new Date().getFullYear()} Marinia Group, LLC. All rights reserved.</p>
-        <p>Marinia Group • MergeMADS • Elevate AI Solutions • Vista Insurance & Financial Services</p>
+        <p>Engineering smarter systems for work, wellness, wealth, and worldbuilding.</p>
+        <p>Support: support@mariniagroup.com • Membership: members@mariniagroup.com • Billing: billing@mariniagroup.com</p>
       </footer>
     </>
   );
