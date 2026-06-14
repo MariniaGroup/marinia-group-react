@@ -31,14 +31,14 @@ const MEMBER_ASSET = `${ASSET}membership/`;
 
 const stripeLinks = {
   onboarding: "https://buy.stripe.com/9B68wP7Ad6wY17C39ufYY00",
-  smartMarketing: '#STRIPE_SMART_MARKETING_WEEKLY_LINK',
-  smartBooks: '#STRIPE_SMART_BOOKS_WEEKLY_LINK',
-  payrollBooks: '#STRIPE_SMART_PAYROLL_BOOKS_WEEKLY_LINK',
-  payrollAddon: '#STRIPE_PAYROLL_WORKER_ADDON_WEEKLY_LINK',
-  smartGrowth: '#STRIPE_SMART_GROWTH_WEEKLY_LINK',
-  smartSystems: '#STRIPE_SMART_SYSTEMS_WEEKLY_LINK',
-  customerPortal: '#STRIPE_CUSTOMER_PORTAL_LINK',
-  calendly: 'https://calendly.com/studio-mergemads/30min'
+  smartMarketing: "https://buy.stripe.com/aFa4gzaMpf3u7w05hCfYY01",
+  smartBooks: "https://buy.stripe.com/9B67sLdYB2gI9E85hCfYY02",
+  payrollBooks: "https://buy.stripe.com/bJe9ATcUx9Ja2bG5hCfYY03",
+  payrollAddon: "https://buy.stripe.com/cNi5kD9Il9Ja2bGcK4fYY04",
+  smartGrowth: "https://buy.stripe.com/28E5kD5s5cVmcQk8tOfYY05",
+  smartSystems: "https://buy.stripe.com/7sY9AT1bPg7y3fK8tOfYY06",
+  customerPortal: "https://billing.stripe.com/p/login/9B68wP7Ad6wY17C39ufYY00",
+  calendly: "https://calendly.com/s-sambrano"
 };
 
 const tiers = [
